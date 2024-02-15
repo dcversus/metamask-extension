@@ -16,6 +16,7 @@ import {
   getUnapprovedConfirmations,
   ///: END:ONLY_INCLUDE_IF
   getShowExtensionInFullSizeView,
+  getSelectedAccount,
 } from '../../selectors';
 import {
   lockMetamask,
@@ -42,7 +43,7 @@ import { DEFAULT_AUTO_LOCK_TIME_LIMIT } from '../../../shared/constants/preferen
 import Routes from './routes.component';
 
 function mapStateToProps(state) {
-  const { appState } = state;
+  const { activeTab, appState } = state;
   const { alertOpen, alertMessage, isLoading, loadingMessage } = appState;
   const { autoLockTimeLimit = DEFAULT_AUTO_LOCK_TIME_LIMIT } =
     getPreferences(state);
@@ -51,6 +52,8 @@ function mapStateToProps(state) {
   return {
     alertOpen,
     alertMessage,
+    account: getSelectedAccount(state),
+    activeTabOrigin: activeTab.origin,
     textDirection: state.metamask.textDirection,
     isLoading,
     loadingMessage,

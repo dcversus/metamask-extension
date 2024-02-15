@@ -121,7 +121,14 @@ import { SEND_STAGES } from '../../ducks/send';
 import DeprecatedNetworks from '../../components/ui/deprecated-networks/deprecated-networks';
 import NewNetworkInfo from '../../components/ui/new-network-info/new-network-info';
 import { ThemeType } from '../../../shared/constants/preferences';
-import { Box } from '../../components/component-library';
+import {
+  AvatarAccount,
+  AvatarAccountSize,
+  BannerBase,
+  Box,
+  ButtonLink,
+  Text,
+} from '../../components/component-library';
 import { ToggleIpfsModal } from '../../components/app/nft-default-image/toggle-ipfs-modal';
 ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
 import KeyringSnapRemovalResult from '../../components/app/modals/keyring-snap-removal-modal';
@@ -129,10 +136,14 @@ import KeyringSnapRemovalResult from '../../components/app/modals/keyring-snap-r
 
 import { SendPage } from '../../components/multichain/pages/send';
 import { DeprecatedNetworkModal } from '../settings/deprecated-network-modal/DeprecatedNetworkModal';
+import { getURLHost } from '../../helpers/utils/util';
+import { BorderColor } from '../../helpers/constants/design-system';
 
 export default class Routes extends Component {
   static propTypes = {
     currentCurrency: PropTypes.string,
+    account: PropTypes.object,
+    activeTabOrigin: PropTypes.string,
     setCurrentCurrencyToUSD: PropTypes.func,
     isLoading: PropTypes.bool,
     loadingMessage: PropTypes.string,
@@ -188,12 +199,20 @@ export default class Routes extends Component {
     metricsEvent: PropTypes.func,
   };
 
-  handleOsTheme() {
-    const osTheme = window?.matchMedia('(prefers-color-scheme: dark)')?.matches
-      ? ThemeType.dark
-      : ThemeType.light;
+  getTheme() {
+    const { theme } = this.props;
+    if (theme === ThemeType.os) {
+      if (window?.matchMedia('(prefers-color-scheme: dark)')?.matches) {
+        return ThemeType.dark;
+      }
+      return ThemeType.light;
+    }
+    return theme;
+  }
 
-    document.documentElement.setAttribute('data-theme', osTheme);
+  setTheme() {
+    const theme = this.getTheme();
+    document.documentElement.setAttribute('data-theme', theme);
   }
 
   ///: BEGIN:ONLY_INCLUDE_IF(desktop)
@@ -216,11 +235,7 @@ export default class Routes extends Component {
     const { theme } = this.props;
 
     if (theme !== prevProps.theme) {
-      if (theme === ThemeType.os) {
-        this.handleOsTheme();
-      } else {
-        document.documentElement.setAttribute('data-theme', theme);
-      }
+      this.setTheme();
     }
   }
 
@@ -230,7 +245,6 @@ export default class Routes extends Component {
       pageChanged,
       setCurrentCurrencyToUSD,
       history,
-      theme,
       showExtensionInFullSizeView,
     } = this.props;
 
@@ -248,11 +262,8 @@ export default class Routes extends Component {
         pageChanged(locationObj.pathname);
       }
     });
-    if (theme === ThemeType.os) {
-      this.handleOsTheme();
-    } else {
-      document.documentElement.setAttribute('data-theme', theme);
-    }
+
+    this.setTheme();
   }
 
   renderRoutes() {
@@ -552,6 +563,8 @@ export default class Routes extends Component {
 
   render() {
     const {
+      account,
+      activeTabOrigin,
       isLoading,
       isUnlocked,
       alertMessage,
@@ -587,6 +600,8 @@ export default class Routes extends Component {
       pendingConfirmations,
       ///: END:ONLY_INCLUDE_IF
     } = this.props;
+
+    const accountName = account.metadata.name;
 
     const loadMessage =
       loadingMessage || isNetworkLoading
@@ -680,6 +695,39 @@ export default class Routes extends Component {
           {this.renderRoutes()}
         </Box>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
+        <Box
+          className="toasts-container"
+          style={{
+            position: 'sticky',
+            bottom: '20px',
+            right: '20px',
+            zIndex: '200',
+          }}
+        >
+          {activeTabOrigin ? (
+            <BannerBase
+              data-theme={
+                // ToDo: this doesn't appear to work
+                this.getTheme() === ThemeType.light
+                  ? ThemeType.dark
+                  : ThemeType.light
+              }
+            >
+              <AvatarAccount
+                address={account.address}
+                size={AvatarAccountSize.Xs}
+                borderColor={BorderColor.transparent}
+              />
+              <Text>
+                {this.context.t('accountIsntConnectedToastText', [
+                  accountName,
+                  getURLHost(activeTabOrigin),
+                ])}
+              </Text>
+              <ButtonLink>{this.context.t('connectAccount')}</ButtonLink>
+            </BannerBase>
+          ) : null}
+        </Box>
       </div>
     );
   }
