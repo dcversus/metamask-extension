@@ -138,6 +138,7 @@ import { SendPage } from '../../components/multichain/pages/send';
 import { DeprecatedNetworkModal } from '../settings/deprecated-network-modal/DeprecatedNetworkModal';
 import { getURLHost } from '../../helpers/utils/util';
 import { BorderColor, Display } from '../../helpers/constants/design-system';
+import { MILLISECOND } from '../../../shared/constants/time';
 
 export default class Routes extends Component {
   static propTypes = {
@@ -740,9 +741,21 @@ export default class Routes extends Component {
                     ])}
                   </Text>
                   <ButtonLink
-                    onClick={() =>
-                      addPermittedAccount(activeTabOrigin, account.address)
-                    }
+                    onClick={() => {
+                      // Connect this account
+                      addPermittedAccount(activeTabOrigin, account.address);
+                      // Use setTimeout to prevent React re-render from
+                      // hiding the tooltip
+                      setTimeout(() => {
+                        // Trigger a mouseenter on the header's connection icon
+                        // to display the informative connection tooltip
+                        document
+                          .querySelector(
+                            '[data-testid="connection-menu"] [data-tooltipped]',
+                          )
+                          ?.dispatchEvent(new CustomEvent('mouseenter', {}));
+                      }, 500 * MILLISECOND);
+                    }}
                   >
                     {this.context.t('connectAccount')}
                   </ButtonLink>
