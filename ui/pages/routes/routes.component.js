@@ -201,6 +201,10 @@ export default class Routes extends Component {
     metricsEvent: PropTypes.func,
   };
 
+  state = {
+    hideConnectAccountToast: false,
+  };
+
   getTheme() {
     const { theme } = this.props;
     if (theme === ThemeType.os) {
@@ -234,10 +238,14 @@ export default class Routes extends Component {
   ///: END:ONLY_INCLUDE_IF
 
   componentDidUpdate(prevProps) {
-    const { theme } = this.props;
+    const { theme, account } = this.props;
 
     if (theme !== prevProps.theme) {
       this.setTheme();
+    }
+
+    if (prevProps.account.address !== account.address) {
+      this.setState({ hideConnectAccountToast: false });
     }
   }
 
@@ -708,7 +716,7 @@ export default class Routes extends Component {
             zIndex: '200',
           }}
         >
-          {showConnectAccountToast ? (
+          {showConnectAccountToast && !this.state.hideConnectAccountToast ? (
             <BannerBase
               data-theme={
                 // ToDo: this doesn't appear to work
@@ -716,6 +724,7 @@ export default class Routes extends Component {
                   ? ThemeType.dark
                   : ThemeType.light
               }
+              onClose={() => this.setState({ hideConnectAccountToast: true })}
             >
               <Box display={Display.Flex} gap={4}>
                 <AvatarAccount
