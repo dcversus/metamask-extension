@@ -29,9 +29,9 @@ import {
   toggleNetworkMenu,
   hideImportTokensModal,
   hideDeprecatedNetworkModal,
+  addPermittedAccount,
   ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
   hideKeyringRemovalResultModal,
-  addPermittedAccount,
   ///: END:ONLY_INCLUDE_IF
 } from '../../store/actions';
 import { pageChanged } from '../../ducks/history/history';
@@ -57,10 +57,12 @@ function mapStateToProps(state) {
   const account = getSelectedAccount(state);
   const activeTabOrigin = activeTab.origin;
   const connectedAccounts = getPermittedAccountsForCurrentTab(state);
-  const showConnectAccountToast =
-    activeTabOrigin &&
-    connectedAccounts.length > 0 &&
-    !connectedAccounts.find((address) => address === account.address);
+  const showConnectAccountToast = Boolean(
+    process.env.MULTICHAIN &&
+      activeTabOrigin &&
+      connectedAccounts.length > 0 &&
+      !connectedAccounts.find((address) => address === account.address),
+  );
 
   return {
     alertOpen,
