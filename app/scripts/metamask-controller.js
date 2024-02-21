@@ -995,6 +995,7 @@ export default class MetamaskController extends EventEmitter {
         async () => await this.keyringController.persistAllKeyrings(),
         (address) => this.preferencesController.setSelectedAddress(address),
         (address) => this.removeAccount(address),
+        this.metaMetricsController.trackEvent.bind(this.metaMetricsController),
       ),
     );
 
