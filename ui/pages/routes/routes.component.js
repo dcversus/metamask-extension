@@ -37,6 +37,8 @@ import {
   AccountDetails,
   ImportNftsModal,
   ImportTokensModal,
+  ToastContainer,
+  Toast,
 } from '../../components/multichain';
 import UnlockPage from '../unlock-page';
 import Alerts from '../../components/app/alerts';
@@ -136,7 +138,6 @@ import { DeprecatedNetworkModal } from '../settings/deprecated-network-modal/Dep
 import { getURLHost } from '../../helpers/utils/util';
 import { BorderColor } from '../../helpers/constants/design-system';
 import { MILLISECOND } from '../../../shared/constants/time';
-import { Toast } from '../../components/multichain/toast';
 
 export default class Routes extends Component {
   static propTypes = {
@@ -706,15 +707,7 @@ export default class Routes extends Component {
           {this.renderRoutes()}
         </Box>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
-        <Box
-          className="toasts-container"
-          style={{
-            position: 'sticky',
-            bottom: '20px',
-            right: '20px',
-            zIndex: '200',
-          }}
-        >
+        <ToastContainer>
           {showConnectAccountToast && !this.state.hideConnectAccountToast ? (
             <Toast
               startAdornment={
@@ -742,12 +735,12 @@ export default class Routes extends Component {
                       '[data-testid="connection-menu"] [data-tooltipped]',
                     )
                     ?.dispatchEvent(new CustomEvent('mouseenter', {}));
-                }, 500 * MILLISECOND);
+                }, 250 * MILLISECOND);
               }}
               onClose={() => this.setState({ hideConnectAccountToast: true })}
             />
           ) : null}
-        </Box>
+        </ToastContainer>
       </div>
     );
   }

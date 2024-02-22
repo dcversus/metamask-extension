@@ -3,6 +3,12 @@ import { ThemeType } from '../../../../shared/constants/preferences';
 import { BannerBase, Box, ButtonLink, Text } from '../../component-library';
 import { Display } from '../../../helpers/constants/design-system';
 
+export const ToastContainer = ({
+  children,
+}: {
+  children: React.ReactNode | string;
+}) => <Box className="toasts-container">{children}</Box>;
+
 export const Toast = ({
   startAdornment,
   text,

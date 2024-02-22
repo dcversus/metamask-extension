@@ -51,7 +51,6 @@ function mapStateToProps(state) {
     getPreferences(state);
   const { completedOnboarding } = state.metamask;
 
-  // ToDo: Get the connected accounts to the current activeTabOrigin,
   // If there is more than one connected account to activeTabOrigin,
   // *BUT* the current account is not one of them, show the banner
   const account = getSelectedAccount(state);
