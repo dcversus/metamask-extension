@@ -1,3 +1,4 @@
+import { Console } from 'console';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -562,6 +563,7 @@ export default class Routes extends Component {
       isIpfsModalOpen,
       hideIpfsModal,
       hideImportTokensModal,
+      switchedNetworkDetails,
       ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
       isShowKeyringSnapRemovalResultModal,
       hideShowKeyringSnapRemovalResultModal,
@@ -656,6 +658,8 @@ export default class Routes extends Component {
           {this.renderRoutes()}
         </Box>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
+        {switchedNetworkDetails &&
+          console.log('switchedNetworkDetails: ', switchedNetworkDetails)}
       </div>
     );
   }
