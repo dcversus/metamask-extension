@@ -1,10 +1,10 @@
 /* eslint-disable jest/require-top-level-describe */
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import testData from '../../../../.storybook/test-data';
-import { Toast } from '.';
 import { AvatarAccount, AvatarAccountSize } from '../../component-library';
 import { BorderColor } from '../../../helpers/constants/design-system';
+import { Toast } from '.';
 
 const [chaosAddress] = Object.keys(testData.metamask.identities);
 
@@ -20,16 +20,18 @@ const onActionClick = jest.fn();
 const onClose = jest.fn();
 
 const ToastArgs = {
-  startAdornment: (<AvatarAccount
-  address={CHAOS_IDENTITY.address}
-  size={AvatarAccountSize.Md}
-  borderColor={BorderColor.transparent}
-/>),
+  startAdornment: (
+    <AvatarAccount
+      address={CHAOS_IDENTITY.address}
+      size={AvatarAccountSize.Md}
+      borderColor={BorderColor.transparent}
+    />
+  ),
   text: 'This is the Toast text',
   actionText: 'Take some action',
   onActionClick,
   onClose,
-}
+};
 
 describe('Toast', () => {
   it('should render Toast component', () => {
