@@ -37,6 +37,7 @@ import {
   BASE_DISPLAY_NAME,
   ZK_SYNC_ERA_DISPLAY_NAME,
   CHAIN_ID_TOKEN_IMAGE_MAP,
+  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP_DARK_MODE,
 } from '../../shared/constants/network';
 import {
   WebHIDConnectedStatuses,
@@ -102,6 +103,7 @@ import {
   SURVEY_END_TIME,
   SURVEY_START_TIME,
 } from '../helpers/constants/survey';
+import { ThemeType } from '../../shared/constants/preferences';
 import {
   getCurrentNetworkTransactions,
   getUnapprovedTransactions,
@@ -1551,6 +1553,23 @@ export function getTheme(state) {
 }
 
 /**
+ * To get the `theme` value which determines which theme is used
+ *
+ * @param {*} state
+ * @returns Boolean
+ */
+export function getUsedTheme(state) {
+  if (state.metamask.theme === 'dark' || state.metamask.theme === 'light') {
+    return state.metamask.theme;
+  }
+
+  const osTheme = window?.matchMedia('(prefers-color-scheme: dark)')?.matches
+    ? ThemeType.dark
+    : ThemeType.light;
+
+  return osTheme;
+}
+/**
  * To retrieve the token list for use throughout the UI. Will return the remotely fetched list
  * from the tokens controller if token detection is enabled, or the static list if not.
  *
@@ -1662,6 +1681,7 @@ export function getTestNetworks(state) {
 
 export function getNonTestNetworks(state) {
   const networkConfigurations = getNetworkConfigurations(state) || {};
+  const settingTheme = getUsedTheme(state);
 
   return [
     // Mainnet always first
@@ -1699,8 +1719,11 @@ export function getNonTestNetworks(state) {
           // Provide an image based on chainID if a network
           // has been added without an image
           imageUrl:
-            network?.rpcPrefs?.imageUrl ??
-            CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP[network.chainId],
+            settingTheme === ThemeType.dark
+              ? network?.rpcPrefs?.imageUrl ??
+                CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP_DARK_MODE[network.chainId]
+              : network?.rpcPrefs?.imageUrl ??
+                CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP[network.chainId],
         },
         removable: true,
       })),

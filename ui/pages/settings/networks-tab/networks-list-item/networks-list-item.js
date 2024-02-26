@@ -6,6 +6,7 @@ import { useI18nContext } from '../../../../hooks/useI18nContext';
 import {
   CHAIN_IDS,
   CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP,
+  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP_DARK_MODE,
   NETWORK_TYPES,
 } from '../../../../../shared/constants/network';
 import { NETWORKS_ROUTE } from '../../../../helpers/constants/routes';
@@ -24,6 +25,8 @@ import {
 } from '../../../../components/component-library';
 import { IconColor } from '../../../../helpers/constants/design-system';
 import { getNetworkLabelKey } from '../../../../helpers/utils/i18n-helper';
+import { ThemeType } from '../../../../../shared/constants/preferences';
+import { useTheme } from '../../../../hooks/useTheme';
 
 const NetworksListItem = ({
   network,
@@ -35,6 +38,7 @@ const NetworksListItem = ({
   const t = useI18nContext();
   const dispatch = useDispatch();
   const environmentType = getEnvironmentType();
+  const settingTheme = useTheme();
   const isFullScreen = environmentType === ENVIRONMENT_TYPE_FULLSCREEN;
   const providerConfig = useSelector(getProviderConfig);
   const {
@@ -44,6 +48,11 @@ const NetworksListItem = ({
     rpcUrl,
     providerType: currentProviderType,
   } = network;
+
+  const networkIcon =
+    settingTheme === ThemeType.dark
+      ? CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP_DARK_MODE
+      : CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP;
 
   const listItemNetworkIsSelected =
     selectedNetworkConfigurationId &&
@@ -85,11 +94,12 @@ const NetworksListItem = ({
       ) : (
         <Icon name={IconName.Check} color={IconColor.transparent} />
       )}
-      {network.chainId in CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP ? (
+      {network.chainId in networkIcon ? (
         <Identicon
           className="networks-tab__content__custom-image"
           diameter={24}
-          image={CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP[network.chainId]}
+          image={networkIcon[network.chainId]}
+          alt="network-icon"
           imageBorder
         />
       ) : (

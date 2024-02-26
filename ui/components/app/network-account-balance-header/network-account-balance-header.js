@@ -14,8 +14,13 @@ import {
 } from '../../../helpers/constants/design-system';
 import Box from '../../ui/box/box';
 import { I18nContext } from '../../../contexts/i18n';
-import { CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP } from '../../../../shared/constants/network';
+import {
+  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP,
+  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP_DARK_MODE,
+} from '../../../../shared/constants/network';
 import { Text } from '../../component-library';
+import { ThemeType } from '../../../../shared/constants/preferences';
+import { useTheme } from '../../../hooks/useTheme';
 
 export default function NetworkAccountBalanceHeader({
   networkName,
@@ -26,7 +31,11 @@ export default function NetworkAccountBalanceHeader({
   chainId,
 }) {
   const t = useContext(I18nContext);
-  const networkIcon = CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP[chainId];
+  const settingTheme = useTheme();
+  const networkIcon =
+    settingTheme === ThemeType.dark
+      ? CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP_DARK_MODE[chainId]
+      : CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP[chainId];
   const networkIconWrapperClass = networkIcon
     ? 'network-account-balance-header__network-account__ident-icon-ethereum'
     : 'network-account-balance-header__network-account__ident-icon-ethereum--gray';

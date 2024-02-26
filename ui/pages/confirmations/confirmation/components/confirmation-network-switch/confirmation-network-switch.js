@@ -14,21 +14,29 @@ import {
 } from '../../../../../helpers/constants/design-system';
 import {
   CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP,
+  CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP_DARK_MODE,
   NETWORK_TO_NAME_MAP,
 } from '../../../../../../shared/constants/network';
+import { ThemeType } from '../../../../../../shared/constants/preferences';
+import { useTheme } from '../../../../../hooks/useTheme';
 
-const getNetworkDetails = (network) => {
+export const getNetworkDetails = (network, theme) => {
   return {
     ...network,
     nickname: network.nickname ?? NETWORK_TO_NAME_MAP[network.chainId],
     iconUrl:
-      network.iconUrl ?? CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP[network.chainId],
+      theme === ThemeType.dark
+        ? network.iconUrl ??
+          CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP_DARK_MODE[network.chainId]
+        : network.iconUrl ?? CHAIN_ID_TO_NETWORK_IMAGE_URL_MAP[network.chainId],
   };
 };
 
 export default function ConfirmationNetworkSwitch({ toNetwork, fromNetwork }) {
-  const fromNetworkDetails = getNetworkDetails(fromNetwork);
-  const toNetworkDetails = getNetworkDetails(toNetwork);
+  const settingTheme = useTheme();
+
+  const fromNetworkDetails = getNetworkDetails(fromNetwork, settingTheme);
+  const toNetworkDetails = getNetworkDetails(toNetwork, settingTheme);
 
   return (
     <Box
