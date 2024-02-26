@@ -6,10 +6,8 @@ import { AvatarAccount, AvatarAccountSize } from '../../component-library';
 import { BorderColor } from '../../../helpers/constants/design-system';
 import { Toast } from '.';
 
-const [chaosAddress] = Object.keys(testData.metamask.identities);
-
-const CHAOS_IDENTITY = {
-  ...testData.metamask.identities[chaosAddress],
+const CHAOS_IDENTITY: any = {
+  ...testData.metamask.identities['0x64a845a5b02460acf8a3d84503b0d68d028b4bb4'],
   balance: '0x152387ad22c3f0',
   keyring: {
     type: 'HD Key Tree',
