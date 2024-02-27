@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import testData from '../../../../.storybook/test-data';
 import configureStore from '../../../store/store';
 import { AccountListItem } from '.';
+import { Checkbox } from '../../component-library/index';
 
 const store = configureStore(testData);
 
@@ -144,6 +145,16 @@ ConnectedSiteChaosItem.args = {
   identity: CHAOS_IDENTITY,
   connectedAvatar: 'https://uniswap.org/favicon.ico',
   connectedAvatarName: 'Uniswap',
+};
+
+export const ChaosStartAccessoryDataItem = (args) => (
+  <div {...CONTAINER_STYLES}>
+    <AccountListItem {...args} />
+  </div>
+);
+ChaosStartAccessoryDataItem.args = {
+  identity: CHAOS_IDENTITY,
+  startAccessory: <Checkbox />,
 };
 
 export const SnapItem = (args) => (

@@ -73,6 +73,7 @@ export const AccountListItem = ({
   isHidden = false,
   currentTabOrigin,
   isActive = false,
+  startAccessory = null,
 }) => {
   const t = useI18nContext();
   const [accountOptionsMenuOpen, setAccountOptionsMenuOpen] = useState(false);
@@ -135,6 +136,11 @@ export const AccountListItem = ({
         }
       }}
     >
+      {startAccessory ? (
+        <Box marginInlineEnd={2} marginTop={1}>
+          {startAccessory}
+        </Box>
+      ) : null}
       {selected && (
         <Box
           className="multichain-account-list-item__selected-indicator"
@@ -396,6 +402,10 @@ AccountListItem.propTypes = {
    * Represents active accounts
    */
   isActive: PropTypes.bool,
+  /**
+   * Represents start accessory
+   */
+  startAccessory: PropTypes.node,
 };
 
 AccountListItem.displayName = 'AccountListItem';
