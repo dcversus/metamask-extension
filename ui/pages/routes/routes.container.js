@@ -54,10 +54,11 @@ function mapStateToProps(state) {
   // If there is more than one connected account to activeTabOrigin,
   // *BUT* the current account is not one of them, show the banner
   const account = getSelectedAccount(state);
-  const activeTabOrigin = activeTab.origin;
+  const activeTabOrigin = activeTab?.origin;
   const connectedAccounts = getPermittedAccountsForCurrentTab(state);
   const showConnectAccountToast = Boolean(
     process.env.MULTICHAIN &&
+      account &&
       activeTabOrigin &&
       connectedAccounts.length > 0 &&
       !connectedAccounts.find((address) => address === account.address),

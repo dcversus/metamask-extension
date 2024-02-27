@@ -244,7 +244,7 @@ export default class Routes extends Component {
       this.setTheme();
     }
 
-    if (prevProps.account.address !== account.address) {
+    if (prevProps.account?.address !== account?.address) {
       this.setState({ hideConnectAccountToast: false });
     }
   }
@@ -613,8 +613,6 @@ export default class Routes extends Component {
       ///: END:ONLY_INCLUDE_IF
     } = this.props;
 
-    const accountName = account.metadata.name;
-
     const loadMessage =
       loadingMessage || isNetworkLoading
         ? this.getConnectingLabel(loadingMessage)
@@ -718,7 +716,7 @@ export default class Routes extends Component {
                 />
               }
               text={this.context.t('accountIsntConnectedToastText', [
-                accountName,
+                account?.metadata?.name,
                 getURLHost(activeTabOrigin),
               ])}
               actionText={this.context.t('connectAccount')}
